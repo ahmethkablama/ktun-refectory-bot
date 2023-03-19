@@ -1,6 +1,6 @@
 {
   "name": "ktun-yemekhane-bot",
-  "version": "2.3.1",
+  "version": "1.0.0",
   "description": "You can publish daily, weekly and monthly, and send notifications to individuals or groups with the data received through the Konya Technical University cafeteria system.",
   "main": "bot.js",
   "scripts": {
