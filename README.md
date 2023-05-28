@@ -22,16 +22,17 @@ Command                 | Explanation
 `/hafta`                | Food menu of the week
 `/ay`                   | Food menu of the month
 `/komutlar`             | Bot commands
-`/iletisim`             | Developer communication
+`/hakkinda`             | Project GitHub link and developer communication
+
 
 <p align="center">
-    <img src="https://github.com/ahmethkablama/ktun-weather-bot/assets/29388602/831dcb62-57e1-4cb3-b3a6-a9ec8a39f344" width="350" hspace="20" >
-    <img src="https://github.com/ahmethkablama/ktun-weather-bot/assets/29388602/36b66eba-4799-4fa1-9f10-6a3b35c18b9d" width="350" hspace="20" >
+    <img src="https://github.com/ahmethkablama/ktun-refectory-bot/assets/29388602/e633e8a8-da3e-4c8d-bcbc-bf60e524dc9b" width="350" hspace="20" >
+    <img src="https://github.com/ahmethkablama/ktun-refectory-bot/assets/29388602/cd7e5885-a30b-4d45-b165-48c24303e1e7" width="350" hspace="20" >
 </p>
 
 <p align="center">
-    <img src="https://github.com/ahmethkablama/ktun-weather-bot/assets/29388602/81575f57-cd8c-4158-be76-ee8e3395d3c1" width="350" hspace="20" >
-    <img src="https://github.com/ahmethkablama/ktun-weather-bot/assets/29388602/c20ea647-9cf3-43cd-98b4-f3d248095f2c" width="350" hspace="20" >
+    <img src="https://github.com/ahmethkablama/ktun-refectory-bot/assets/29388602/c7463da7-216b-4d40-b80f-77844525559f" width="350" hspace="20" >
+    <img src="https://github.com/ahmethkablama/ktun-refectory-bot/assets/29388602/27d02135-e563-4c13-aedb-8364a608aa5c" width="350" hspace="20" >
 </p>
 
 
