@@ -6,7 +6,7 @@ const { Telegraf } = require('telegraf')
 require('dotenv').config();
 const { telegrafThrottler } = require('telegraf-throttler');
 
-const bot = new Telegraf(process.env.TELEGRAM_API_TOKEN)
+const bot = new Telegraf(process.env.TELEGRAM_YOUR_API)
 const throttler = telegrafThrottler();
 
 require('dayjs/locale/tr'); 
@@ -22,7 +22,7 @@ const getMenuNightJob = new CronJob('01 00 * * *', async () => {
 });
 
 const getMenuNotificationJob = new CronJob('00 09 * 0-5,8-11 1-5', async () => { 
-  bot.telegram.sendMessage(process.env.TELEGRAM_ID, await getTodayMenu(), {parse_mode: 'Markdown'}, {disable_notification: false}); 
+  bot.telegram.sendMessage(process.env.TELEGRAM_GROUP_ID, await getTodayMenu(), {parse_mode: 'Markdown'}, {disable_notification: false}); 
 });
 
 async function setMenuOfMonth() { 
@@ -47,7 +47,7 @@ async function setMenuOfMonth() {
       menu.push({ ...menuData }); 
       menuData = {date: '', foods: [], nomeals: '', totalcalorie: '' };
       
-    //console.log(`${menu.length}`);
+    //console.log(`${menu[0].date}`);
   });
 }
   catch(err){
@@ -143,7 +143,7 @@ async function getMenuOfMonth() {
 
 function convertToList(menu) { 
 return `
-🍽 *${menu.date.toUpperCase()}* 🍽
+🍽 *${menu.date.toLocaleUpperCase('TR')}* 🍽
 ———————————
 • ${menu.foods.join("\n• ")}${menu.nomeals.toUpperCase().replace("ÖĞÜN YOK", "ÖĞÜN YOK (resmi tatil)")}
 _${menu.totalcalorie.replace("Toplam Kalori", "➥ toplam kalori")}_\n`;
@@ -155,15 +155,18 @@ async function startBot() {
 
 bot.use(throttler);
 
-bot.start((ctx) =>  ctx.replyWithMarkdown(`Selamün Aleyküm *${ctx.from.first_name}* 🙂 hoş geldin
+bot.start(async (ctx) => { bot.telegram.sendMessage(ctx.chat.id,`Selamün Aleyküm *${ctx.from.first_name}* 🙂 hoş geldin
 
 Bot aracılığı ile Konya Teknik Üniversitesi yemekhane menüsünü öğrenebilir, yemekhane ile ilgili bilgilere ulaşabilirsiniz.
 
 Tüm komutları görüntülemek için */komutlar* komutunu kullanabilir veya alttaki *☰ Menü* bölümünü kullanabilirsiniz.
 
 Yemekhane rezervasyonunu aşağıdaki butona tıklayarak gerçekleştirebilirsiniz.`,
-  {reply_markup:{inline_keyboard: [[{text: "YEMEK REZERVASYON SİSTEMİ", url: "https://yemekhane.ktun.edu.tr/"}]]}},
-));
+  {parse_mode: 'Markdown', reply_markup:{inline_keyboard: [[{text: "YEMEK REZERVASYON SİSTEMİ", url: "https://yemekhane.ktun.edu.tr/"}]]}})
+
+  if (ctx.chat.id != 1705065791)bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
+
+})
 
 bot.command('komutlar', async ctx => {
 
@@ -183,40 +186,43 @@ ctx.replyWithMarkdown(`Aşağıdaki komutlara tıklayarak ilgili bilgileri çağ
 
 bot.command('dun', async ctx => {
   bot.telegram.sendMessage(ctx.chat.id, await getYesterdayMenu(), {parse_mode: 'Markdown'}).then(function(resp) {}).catch(function(err) {});
+ bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
 });
 
 bot.command('bugun', async ctx => {
    bot.telegram.sendMessage(ctx.chat.id, await getTodayMenu(), {parse_mode: 'Markdown'}).then(function(resp) {}).catch(function(err) {});
+  bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
 });
 
 bot.command('yarin', async ctx => {
     bot.telegram.sendMessage(ctx.chat.id, await getTomorrowMenu(), {parse_mode: 'Markdown'}).then(function(resp) {}).catch(function(err) {});
+   bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
 });
 
 bot.command('hafta', async ctx => {
     bot.telegram.sendMessage(ctx.chat.id, await getMenuOfWeek(), {parse_mode: 'Markdown'}).then(function(resp) {}).catch(function(err) {});
+   bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
 });
 
 bot.command('ay', async ctx => {
     bot.telegram.sendMessage(ctx.chat.id, await getMenuOfMonth(), {parse_mode: 'Markdown'}).then(function(resp) {}).catch(function(err) {});
+   bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
 });
 
 bot.command('rezervasyon', (ctx) => { ctx.replyWithMarkdown("Yemekhane rezervasyonunu butona 👇 tıklayarak site üzerinden gerçekleştirebilirsin",
-    {reply_markup:{inline_keyboard: [[{text: "Yemek Rezervasyon Sistemi", url: "https://yemekhane.ktun.edu.tr/"}]]}}
-)});
+    {reply_markup:{inline_keyboard: [[{text: "Yemek Rezervasyon Sistemi", url: "https://yemekhane.ktun.edu.tr/"}]]}})
+   bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
+});
 
 
 bot.command('vakit', (ctx) => {
   ctx.replyWithMarkdown('Yemek vakti *Öğlen: 11:30 - 14:00* arasıdır')
-});
-
-
-bot.command('iletisim', (ctx) => {
-  ctx.replyWithMarkdown(`Bot ile ilgili sorun, şikayet ve önerilerinizi *@ahmethkablama* 'ya iletebilirsiniz`)
+ bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
 });
 
 
 bot.command('konum', (ctx) => {
+ bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
   ctx.replyWithMarkdown('*Hangi yemekhanenin konumunu öğrenmek istiyorsun*',
   {
       reply_markup:{
@@ -240,6 +246,16 @@ bot.action('KSST', (ctx) =>{
   bot.telegram.sendLocation(ctx.chat.id, 38.0178754, 32.5099072)).then(function(resp) {}).catch(function(err) {});
   }
 )
+
+bot.command('hakkinda', async (ctx) => {
+bot.telegram.sendMessage(ctx.chat.id,`Proje açık kaynak olarak [GitHub](https://github.com/ahmethkablama/ktun-refectory-bot) üzerinden geliştirilmektedir. Siz de projeye katılarak geliştirilmesine yardımcı olabilirsiniz.
+    
+Yazılım ile ilgili sorun, öneri ve görüşlerinizi @ahmethkablama 'ya iletebilirsiniz. 
+
+[LinkedIn](https://www.linkedin.com/in/ahmethkablama/) | [Instagram](https://www.instagram.com/ahmethkablama/) | [Web](http://ahmethkablama.com/)`, {parse_mode: 'Markdown' , disable_web_page_preview: true});
+bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`🆔 ${ctx.chat.id}\n👤 @${ctx.chat.username || '-'}\n😊 ${ctx.from.first_name || '-'} ${ctx.from.last_name || '-'}\n💬 ${ctx.message.text || '-'}`);
+//bot.telegram.sendMessage(process.env.TELEGRAM_YOUR_ID,`Tarih: ${dayjs().format('🕗 HH:mm:ss 🗓️ DD MMMM')}\nSohbet/Mesaj: ${ctx.chat.id} / ${ctx.message.chat.id}\nKullanıcı: @${ctx.chat.username || 'kullanı adı yok'}\nAd Soyad: ${ctx.from.first_name} ${ctx.from.last_name}\nMesaj: ${ctx.message.text || 'yazı yok'}`);
+});
 
 bot.launch();
 
